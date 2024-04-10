@@ -1,0 +1,8 @@
+{
+    "number_of_sensors": 3,
+    "camera": false,
+    "correction_distance_cm": 100,
+    "apikey": "1234",
+    "email": "test@example.com",
+    "setup_done": true
+}
