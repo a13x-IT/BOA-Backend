@@ -2,16 +2,16 @@
 #include <ArduinoJson.h>
 #include <ArduinoHttpClient.h>
 #include <Ethernet.h>
+#include <networkingServer.h>
 
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress server(192, 168, 1, 100);
+int port = 8050;
+IPAddress ip = (192,168,13,240);
+Networking::server httpServer(port,ip,A0,10);
 
 void setup() {
-  Serial.begin(9600);
-  Ethernet.begin(mac);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  httpServer.sendData();
 }
 
