@@ -8,9 +8,6 @@ namespace Networking
     Ethernet.begin(mac, ip);
     Eth_server.begin();
     Serial.println("Server started");
-    // this->analogPort = analogPin;
-    // this->ADCBits = ADCbits;
-    Hardwareinterface::analogIn hardware(analogPin, ADCbits);
   }
   
   server::~server()
@@ -23,24 +20,35 @@ namespace Networking
     EthernetClient client = Eth_server.available();
 
     if (client) {
-      Serial.println("New client");
-      while (client.connected()) {
-        if (client.available()) {
-          char c = client.read();
-          Serial.write(c); // Print the received character to the Serial Monitor
-
-          // If the client sends a GET request, respond with the analog input data
-          if (c == '\n') {
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-Type: text/plain");
-            client.println();
-            client.println(hardware.getData());
-            break;
-          }
+    Serial.println("New client");
+    String request = "";
+    
+    // Read the HTTP request
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+        request += c;
+        
+        // Check for end of HTTP request
+        if (request.endsWith("\r\n\r\n")) {
+          break;
         }
       }
-      client.stop();
-      Serial.println("Client disconnected");
     }
+    
+    // Respond to the HTTP request
+    if (request.startsWith("GET")) {
+      client.println("HTTP/1.1 200 OK");
+      client.println("Content-Type: text/plain");
+      client.println();
+      client.println(hardware.getData());
+    } else {
+      client.println("HTTP/1.1 400 Bad Request");
+    }
+
+    client.stop();
+    Serial.println("Client disconnected");
   }
+  }
+
 } // namespace Networking

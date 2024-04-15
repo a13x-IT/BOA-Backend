@@ -15,7 +15,7 @@ namespace Networking
     EthernetServer Eth_server;
     uint8_t analogPort = A0;
     int ADCBits = 10;
-    Hardwareinterface::analogIn hardware(uint8_t, int);
+    Hardwareinterface::analogIn hardware;
 
   public:
     server(int port, IPAddress address, uint8_t analogPort, int ADCBits);
